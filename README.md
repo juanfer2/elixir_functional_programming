@@ -1,5 +1,8 @@
 # ElixirInAction
 
+This repository is a guide for the book elixir in action, each one of the caps must be on the folder
+lib
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
