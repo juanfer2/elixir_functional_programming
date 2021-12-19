@@ -79,3 +79,13 @@ Este código se transforma en tiempo de compilación en lo siguiente:
 ```elixir
 IO.puts(Integer.to_string(abs(-5)))
 ```
+
+puedes usar el pipeline operator en múltiple líneas
+
+
+```elixir
+-5
+  |> abs()
+  |> Integer.to_string()
+  |> IO.puts
+```
