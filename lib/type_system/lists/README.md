@@ -86,3 +86,68 @@ Nuevamente, la complejidad es `O(n)`, siendo n la longitud de la lista de la izq
 anexando a). En general, debe evitar agregar elementos al final de una lista. las listas
 son más eficientes cuando los elementos nuevos se colocan en la parte superior o se extraen de ella.
 Para entender por qué, veamos la naturaleza recursiva de las listas
+
+## Recursive list definition
+
+Una forma alternativa de ver las listas es pensar en
+ellos como estructuras recursivas. Una lista puede estar representada por un par (cabeza, cola), donde la cabeza es la primera
+elemento de la lista y la cola "apunta" a la (cabeza, cola)
+par de los elementos restantes, como se ilustra en la figura 2.1. Si está familiarizado con Lisp, entonces sabe
+este concepto como contras de células.
+En Elixir, hay una sintaxis especial para admitir la definición de lista recurrente:
+
+![image](https://user-images.githubusercontent.com/64051193/147367783-0b851dea-6e2f-461c-b96c-6da3baf94c4d.png)
+
+```elixir
+a_list = [head | tail] 
+```
+
+head puede ser cualquier tipo de datos, mientras que tail es en sí mismo
+una lista. Si tail es una lista vacía, indica el final de
+la lista completa.
+Veamos algunos ejemplos:
+
+```elixir
+[1 | []] #=> [1]
+[1 | [2 | []]] #=> [1, 2]
+[1 | [2]] #=> [1, 2]
+[1 | [2, 3, 4]] #=> [1, 2, 3, 4]
+```
+
+Esta es solo otra forma sintáctica de definir listas, pero ilustra lo que es una lista. Es un
+emparejar con dos valores: una cabeza y una cola, siendo la cola en sí misma una lista.
+El siguiente fragmento es una definición recursiva canónica de una lista:
+
+```elixir
+[1 | [2 | [3 | [4 | []]]]] #=> [1, 2, 3, 4]
+```
+
+Por supuesto, nadie quiere escribir construcciones como esta. Pero es importante que estés
+siempre consciente de que, internamente, las listas son estructuras recursivas de pares (cabeza, cola).
+Para obtener el encabezado de la lista, puede usar la función hd. La cola se puede obtener por
+llamando a la función tl:
+
+```elixir
+hd([1, 2, 3, 4]) #=> 1
+tl([1, 2, 3, 4]) #=> [2, 3, 4]
+```
+
+Ambas operaciones son `O(1)`, porque equivalen a leer uno u otro valor
+del par (cabeza, cola).
+
+- NOTA En aras de la integridad, debe mencionarse que la cola
+no necesita ser una lista. Puede ser de cualquier tipo. Cuando la cola no es una lista, se dice que
+la lista es incorrecta y la mayoría de las manipulaciones estándar de la lista no funcionarán.
+Las listas incorrectas tienen algunos usos especiales, pero no nos ocuparemos de ellos en este libro.
+
+Una vez que conozca la naturaleza recursiva de la lista, es simple y eficiente impulsar una nueva
+elemento al principio de la lista:
+
+```elixir
+a_list = [5, :value, true] #=> [5, :value, true]
+new_list = [:new_element | a_list] #=> [:new_element, 5, :value, true]
+```
+
+La construcción de `new_list` es una operación `O(1)` y no se produce ninguna copia de memoria.
+la cola de `new_list` es la `a_list`. Para comprender cómo funciona esto, analicemos el
+detalles internos de inmutabilidad un poco.
